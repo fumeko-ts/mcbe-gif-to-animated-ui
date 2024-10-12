@@ -33,23 +33,19 @@ def generate_flipbook(gif_path, output_path, container_name):
     if container_name not in container_sizes:
         print(f"Container name '{container_name}' not found.")
         return
-
     frame_width, frame_height = container_sizes[container_name]
     gif = Image.open(gif_path)
     frames = [frame.copy() for frame in ImageSequence.Iterator(gif)]
     sprite_sheet_height = frame_height * len(frames)
     sprite_sheet = Image.new("RGBA", (frame_width, sprite_sheet_height))
-
     for index, frame in enumerate(frames):
         resized_frame = frame.resize((frame_width, frame_height))
         sprite_sheet.paste(resized_frame, (0, index * frame_height))
-
     sprite_sheet_name = os.path.splitext(os.path.basename(gif_path))[0]
     textures_ui_path = os.path.join(output_path, "pack", "textures", "ui")
     os.makedirs(textures_ui_path, exist_ok=True)
     sprite_sheet_path = os.path.join(textures_ui_path, f"{sprite_sheet_name}.png")
     sprite_sheet.save(sprite_sheet_path)
-
     frames_data = {
         "frames": [
             {
@@ -71,11 +67,9 @@ def generate_flipbook(gif_path, output_path, container_name):
             "layers": [{"name": "Background", "opacity": 255, "blendMode": "normal"}]
         }
     }
-
     frames_file_path = os.path.join(textures_ui_path, f"{sprite_sheet_name}.json")
     with open(frames_file_path, 'w') as frames_file:
         json.dump(frames_data, frames_file, indent=4)
-
     print(f"Sprite sheet saved to {sprite_sheet_path}")
     print(f"Frames file saved to {frames_file_path}")
 
@@ -99,9 +93,7 @@ def generate_flipbook(gif_path, output_path, container_name):
     }
     with open(ui_file_path, 'w') as ui_file:
         json.dump(ui_data, ui_file, indent=4)
-
     print(f"UI file saved to {ui_file_path}")
-
     update_ui_defs(ui_file_path, output_path)
 
 def update_ui_defs(new_ui_file_path, output_path):
@@ -111,19 +103,15 @@ def update_ui_defs(new_ui_file_path, output_path):
             ui_defs_data = json.load(ui_defs_file)
     else:
         ui_defs_data = {"ui_defs": []}
-
     relative_ui_file_path = os.path.relpath(new_ui_file_path, os.path.join(output_path, "pack")).replace("\\", "/")
     if relative_ui_file_path not in ui_defs_data["ui_defs"]:
         ui_defs_data["ui_defs"].append(relative_ui_file_path)
-
     # Add ui/enderchest2.json to ui_defs
     enderchest2_path = "ui/enderchest2.json"
     if enderchest2_path not in ui_defs_data["ui_defs"]:
         ui_defs_data["ui_defs"].append(enderchest2_path)
-
     with open(ui_defs_path, 'w') as ui_defs_file:
         json.dump(ui_defs_data, ui_defs_file, indent=4)
-
     print(f"Updated _ui_defs.json with {relative_ui_file_path} and {enderchest2_path}")
 
 def process_gifs_in_folder(folder_path):
@@ -138,7 +126,6 @@ def copy_json_files(guis_folder, ui_folder):
     if not os.path.exists(guis_folder):
         print(f"Source folder '{guis_folder}' does not exist.")
         return
-
     os.makedirs(ui_folder, exist_ok=True)
     for file_name in os.listdir(guis_folder):
         if file_name.endswith(".json"):
@@ -171,6 +158,22 @@ def create_manifest(output_path):
         json.dump(manifest_data, manifest_file, indent=4)
     print(f"Manifest file saved to {manifest_path}")
 
+def create_black_images():
+    # Directory path
+    directory = "pack/textures/ui"
+
+    # Ensure the directory exists
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    # Create and save 6 full black images
+    for i in range(6):
+        # Create a new black image (size 1920x1080 for example)
+        img = Image.new('RGB', (2640, 1492), color='black')
+        img.save(f"{directory}/panorama_{i}.png")
+
+    print("Black images created and saved successfully.")
+
 # Example usage
 folder_path = os.path.dirname(os.path.abspath(__file__))
 guis_folder = os.path.join(folder_path, "guis")
@@ -178,3 +181,5 @@ ui_folder = os.path.join(folder_path, "pack", "ui")
 process_gifs_in_folder(folder_path)
 copy_json_files(guis_folder, ui_folder)
 create_manifest(folder_path)
+
+create_black_images()
