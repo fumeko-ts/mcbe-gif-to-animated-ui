@@ -1,8 +1,6 @@
 Mcbe-Gif-to-Animated-Panorama
 
 
-WILL UPDATE AS SOON AS I FINISH VER 1.4 in the next update i hope i will be finished the containers for the most part i have but there is no telling what may hapen like the other day all the resources i was useing for the py file was deleted and unrecoverable so i had to start from scratch again but i think it was well woth it because the progress i have made in the past hours is mental
-
 not for pocket edition
 
 WARNING: may not work with specific screen aspect ratios the ideal ratio is 1920x1080 if you have less or more there will be black lines around the panorama or there may not it really just depends it is something that can not be fixed to my knowlege 
